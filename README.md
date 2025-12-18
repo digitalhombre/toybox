@@ -9,6 +9,7 @@ A simple, elegant web application for viewing conversational turns from text fil
 - Navigate between turns using:
   - Previous/Next buttons
   - Left/Right arrow keys
+- Dark/Light mode toggle with persistent preference
 - Beautiful, gradient-themed UI
 - Responsive design
 
@@ -17,7 +18,8 @@ A simple, elegant web application for viewing conversational turns from text fil
 1. Open `conversation-viewer.html` in a web browser
 2. Click "Choose File" to upload a conversation text file
 3. Use the navigation buttons or arrow keys to move between turns
-4. Click "Back to Upload" to load a different file
+4. Click the moon/sun icon in the top-right corner to toggle dark mode
+5. Click "Back to Upload" to load a different file
 
 ## File Format
 
@@ -73,6 +75,11 @@ and continues here
 - Works offline - just open in a browser
 - Uses FileReader API for file processing
 - Keyboard event listeners for arrow key navigation
+- Dark mode implementation:
+  - CSS custom properties (variables) for theming
+  - LocalStorage for persistent theme preference
+  - Smooth transitions between themes
+  - Carefully designed dark color scheme for readability
 - Robust parsing handles:
   - Multiple line ending formats (CRLF, LF, CR)
   - Multi-line messages with preserved formatting
