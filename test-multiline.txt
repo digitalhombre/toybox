@@ -1,0 +1,43 @@
+Alice said:
+This is a message that starts on the next line
+It spans multiple lines
+And includes some details
+
+Bob said:
+This is Bob's response
+Also multi-line
+With blank lines in between
+
+Alice said: This one has text on the same line as "said:"
+Bob said: And so does this response
+
+Charlie said:
+A message with blank lines:
+
+Like this one
+
+And another paragraph here
+Dana said:
+Short response
+
+Eve said: I told him: "Go away" and he said: "No way!"
+Frank said:
+He replied: "That's interesting" when I mentioned it
+The conversation continued for a while
+
+Alice said:
+Here's a really long message that goes on and on
+spanning many lines
+with various content
+including punctuation!
+and special characters: @#$%
+
+blank lines
+
+and more text
+Bob said: Just a simple one-liner this time
+
+Grace said:
+Message with tabs	and spaces
+Henry said:
+Final message to end the conversation

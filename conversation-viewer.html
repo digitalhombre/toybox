@@ -251,29 +251,65 @@
 
         function parseConversation(text) {
             turns = [];
-            const lines = text.split('\n').map(line => line.trim()).filter(line => line);
 
-            for (let i = 0; i < lines.length; i += 2) {
-                if (i + 1 < lines.length) {
-                    const firstLine = lines[i];
-                    const secondLine = lines[i + 1];
+            // Normalize line endings (handle \r\n, \r, and \n)
+            text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 
-                    const firstMatch = firstLine.match(/^(.+?)\s+said:\s*(.+)$/);
-                    const secondMatch = secondLine.match(/^(.+?)\s+said:\s*(.+)$/);
+            const lines = text.split('\n');
+            const speakers = [];
 
-                    if (firstMatch && secondMatch) {
-                        turns.push({
-                            speaker1: {
-                                name: firstMatch[1].trim(),
-                                text: firstMatch[2].trim()
-                            },
-                            speaker2: {
-                                name: secondMatch[1].trim(),
-                                text: secondMatch[2].trim()
-                            }
-                        });
+            let currentSpeaker = null;
+            let currentMessage = [];
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                // Match "name said:" with optional text after
+                const match = line.match(/^(.+?)\s+said:\s*(.*)$/);
+
+                if (match) {
+                    // Save previous speaker if exists
+                    if (currentSpeaker !== null) {
+                        const messageText = currentMessage.join('\n').trim();
+                        if (messageText) {
+                            speakers.push({
+                                name: currentSpeaker,
+                                text: messageText
+                            });
+                        }
                     }
+
+                    // Start new speaker
+                    currentSpeaker = match[1].trim();
+                    currentMessage = [];
+
+                    // If there's text after "said:" on the same line, include it
+                    const afterSaid = match[2].trim();
+                    if (afterSaid) {
+                        currentMessage.push(afterSaid);
+                    }
+                } else if (currentSpeaker !== null) {
+                    // Add line to current speaker's message
+                    currentMessage.push(line);
                 }
+            }
+
+            // Save last speaker
+            if (currentSpeaker !== null) {
+                const messageText = currentMessage.join('\n').trim();
+                if (messageText) {
+                    speakers.push({
+                        name: currentSpeaker,
+                        text: messageText
+                    });
+                }
+            }
+
+            // Group speakers into turns (pairs)
+            for (let i = 0; i < speakers.length - 1; i += 2) {
+                turns.push({
+                    speaker1: speakers[i],
+                    speaker2: speakers[i + 1]
+                });
             }
         }
 
@@ -282,14 +318,25 @@
 
             const turn = turns[currentTurnIndex];
 
+            // Helper function to escape HTML and preserve newlines
+            function formatText(text) {
+                return text
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#039;')
+                    .replace(/\n/g, '<br>');
+            }
+
             turnDisplay.innerHTML = `
                 <div class="speaker-message">
                     <div class="speaker-name">${turn.speaker1.name}</div>
-                    <div class="speaker-text">${turn.speaker1.text}</div>
+                    <div class="speaker-text">${formatText(turn.speaker1.text)}</div>
                 </div>
                 <div class="speaker-message">
                     <div class="speaker-name">${turn.speaker2.name}</div>
-                    <div class="speaker-text">${turn.speaker2.text}</div>
+                    <div class="speaker-text">${formatText(turn.speaker2.text)}</div>
                 </div>
             `;
 
